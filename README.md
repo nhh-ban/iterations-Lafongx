@@ -8,6 +8,8 @@ This is the iteration assignment in BAN400. As you know -- given that you have c
 
 **Student number: s221654**
 
+** Updating this line to check if everything works as it should**
+
 ## :information_source: Problem 1
 Update the personal information above.
 

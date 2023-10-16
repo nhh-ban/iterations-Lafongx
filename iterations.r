@@ -1,3 +1,6 @@
+# Installing packages
+install.packages(c("httr", "jsonlite", "ggplot2", "DescTools", "tidyverse", "magrittr", "rlang", "lubridate", "anytime", "readr", "yaml"))
+
 library(httr)
 library(jsonlite)
 library(ggplot2)
