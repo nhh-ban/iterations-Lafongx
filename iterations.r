@@ -1,3 +1,6 @@
+# Installing packages
+install.packages(c("httr", "jsonlite", "ggplot2", "DescTools", "tidyverse", "magrittr", "rlang", "lubridate", "anytime", "readr", "yaml", "glue"))
+
 library(httr)
 library(jsonlite)
 library(ggplot2)
@@ -9,6 +12,7 @@ library(lubridate)
 library(anytime)
 library(readr)
 library(yaml)
+library(glue)
 
 #### 1: Beginning of script
 
@@ -52,7 +56,7 @@ source("gql-queries/vol_qry.r")
 
 stations_metadata_df %>% 
   filter(latestData > Sys.Date() - days(7)) %>% 
-  sample_n(1) %$% 
+  sample_n(1) %$%
   vol_qry(
     id = id,
     from = to_iso8601(latestData, -4),
@@ -61,9 +65,31 @@ stations_metadata_df %>%
   GQL(., .url = configs$vegvesen_url) %>%
   transform_volumes() %>% 
   ggplot(aes(x=from, y=volume)) + 
-  geom_line() + 
+  geom_line() +
   theme_classic()
 
+
+### 6: Making the plot prettier (jfc smh FINALLY)
+station_to_plot <- stations_metadata_df %>% 
+  filter(latestData > Sys.Date() - days(7)) %>% 
+  sample_n(1)
+
+station_to_plot %$%
+  vol_qry(
+    id = id,
+    from = to_iso8601(latestData, -4),
+    to = to_iso8601(latestData, 0)
+  ) %>% 
+  GQL(., .url = configs$vegvesen_url) %>%
+  transform_volumes() %>% 
+  ggplot(aes(x=from, y=volume)) + 
+  geom_line(color = "blue") +  # Colouring the line
+  labs(
+    title = paste("Traffic Volume at Station:", station_to_plot$name), 
+    x = "Date", 
+    y = "Volume"
+  ) +
+  theme_light()  # Using a light theme for a clean look
 
 
 
